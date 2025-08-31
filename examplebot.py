@@ -88,8 +88,74 @@ from typing import List, Dict, Any
 from rlgym.api import RewardFunction, AgentID
 from rlgym.rocket_league.api import GameState
 from rlgym.rocket_league import common_values
+<<<<<<< HEAD
 import numpy as np
 
+=======
+from typing import Any, Dict, List
+import numpy as np
+from rlgym.rocket_league.common_values import BALL_MAX_SPEED
+
+class AdvancedTouchReward(RewardFunction[AgentID, GameState, float]):
+    def __init__(self, touch_reward: float = 0.0, acceleration_reward: float = 1, use_touch_count: bool = False):
+        self.touch_reward = touch_reward
+        self.acceleration_reward = acceleration_reward
+        self.use_touch_count = use_touch_count
+
+        self.prev_ball = None
+
+    def reset(self, agents: List[AgentID], initial_state: GameState, shared_info: Dict[str, Any]) -> None:
+        self.prev_ball = initial_state.ball
+
+    def get_rewards(self, agents: List[AgentID], state: GameState, is_terminated: Dict[AgentID, bool],
+                    is_truncated: Dict[AgentID, bool], shared_info: Dict[str, Any]) -> Dict[AgentID, float]:
+        rewards = {agent: 0 for agent in agents}
+        ball = state.ball
+        for agent in agents:
+            touches = state.cars[agent].ball_touches
+
+            if touches > 0:
+                if not self.use_touch_count:
+                    touches = 1
+                acceleration = np.linalg.norm(ball.linear_velocity - self.prev_ball.linear_velocity) / BALL_MAX_SPEED
+                rewards[agent] += self.touch_reward * touches
+                rewards[agent] += acceleration * self.acceleration_reward
+
+        self.prev_ball = ball
+
+        return rewards
+
+class FaceBallReward(RewardFunction):
+    """Rewards the agent for facing the ball"""
+    def reset(self, agents: List[AgentID], initial_state: GameState, shared_info: Dict[str, Any]) -> None:
+        pass
+
+
+    def get_rewards(self, agents: List[AgentID], state: GameState, is_terminated: Dict[AgentID, bool],
+                    is_truncated: Dict[AgentID, bool], shared_info: Dict[str, Any]) -> Dict[AgentID, float]:
+        rewards = {}
+
+        for agent in agents:
+            car = state.cars[agent]
+            ball = state.ball
+
+            car_pos = car.physics.position
+            ball_pos = ball.position
+            direction_to_ball = ball_pos - car_pos
+            norm = np.linalg.norm(direction_to_ball)
+
+            if norm > 0:
+                direction_to_ball /= norm
+
+            car_forward = car.physics.forward
+            dot_product = np.dot(car_forward, direction_to_ball)
+
+            reward = dot_product  # Dot product directly indicates alignment (-1 to 1)
+            rewards[agent] = reward
+
+        return rewards
+                        
+>>>>>>> 27fbf3e8c5dfd29ee5575d83612897a2518d000c
 class SpeedTowardBallReward(RewardFunction[AgentID, GameState, float]):
     """Rewards the agent for moving quickly toward the ball"""
     
@@ -196,9 +262,16 @@ def build_rlgym_v2_env():
 
     reward_fn = CombinedReward(
         (InAirReward(), 0.15),
+<<<<<<< HEAD
         (SpeedTowardBallReward(), 5),
         (VelocityBallToGoalReward(), 10),
         (TouchReward(), 50),
+=======
+        (SpeedTowardBallReward(), 5.0),
+        (FaceBallReward(), 1.0),
+        (VelocityBallToGoalReward(), 10.0),
+        (AdvancedTouchReward(touch_reward=0.5, acceleration_reward=1.0), 75.0),
+>>>>>>> 27fbf3e8c5dfd29ee5575d83612897a2518d000c
         (GoalReward(), 500.0)
     )
 
@@ -262,6 +335,7 @@ if __name__ == "__main__":
                       add_unix_timestamp=False,
                       checkpoint_load_folder=checkpoint_load_folder,
                       checkpoints_save_folder=checkpoint_folder,                      # entropy coefficient - this determines the impact of exploration
+<<<<<<< HEAD
                       policy_lr=1e-4,
                       device="cpu", # policy learning rate
                       critic_lr=1e-4,  # critic learning rate
@@ -270,6 +344,16 @@ if __name__ == "__main__":
                       standardize_obs=False, # Don't touch these.
                       save_every_ts=1_000_000,  # save every 1M steps
                       timestep_limit=1_000_000_000,  # Train for 1B steps
+=======
+                      policy_lr=2e-4,
+                      device="auto", # policy learning rate
+                      critic_lr=2e-4,  # critic learning rate
+                      ppo_epochs=2,   # number of PPO epochs
+                      standardize_returns=True, # Don't touch these.
+                      standardize_obs=False, # Don't touch these.
+                      save_every_ts=10_000_000,  # save every 1M steps
+                      timestep_limit=50_000_000_000,  # Train for 1B steps
+>>>>>>> 27fbf3e8c5dfd29ee5575d83612897a2518d000c
                       log_to_wandb=False # Set this to True if you want to use Weights & Biases for logging.
                       ) 
     learner.learn()
