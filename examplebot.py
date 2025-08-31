@@ -257,9 +257,10 @@ def build_rlgym_v2_env():
 
     reward_fn = CombinedReward(
         (InAirReward(), 0.15),
-        (SpeedTowardBallReward(), 5),
-        (VelocityBallToGoalReward(), 10),
-        (TouchReward(), 50),
+        (SpeedTowardBallReward(), 5.0),
+        (FaceBallReward(), 1.0),
+        (VelocityBallToGoalReward(), 10.0),
+        (AdvancedTouchReward(touch_reward=0.5, acceleration_reward=1.0), 75.0),
         (GoalReward(), 500.0)
     )
 
@@ -323,14 +324,14 @@ if __name__ == "__main__":
                       add_unix_timestamp=False,
                       checkpoint_load_folder=checkpoint_load_folder,
                       checkpoints_save_folder=checkpoint_folder,                      # entropy coefficient - this determines the impact of exploration
-                      policy_lr=1e-4,
-                      device="cpu", # policy learning rate
-                      critic_lr=1e-4,  # critic learning rate
+                      policy_lr=2e-4,
+                      device="auto", # policy learning rate
+                      critic_lr=2e-4,  # critic learning rate
                       ppo_epochs=2,   # number of PPO epochs
                       standardize_returns=True, # Don't touch these.
                       standardize_obs=False, # Don't touch these.
-                      save_every_ts=1_000_000,  # save every 1M steps
-                      timestep_limit=1_000_000_000,  # Train for 1B steps
+                      save_every_ts=10_000_000,  # save every 1M steps
+                      timestep_limit=50_000_000_000,  # Train for 1B steps
                       log_to_wandb=False # Set this to True if you want to use Weights & Biases for logging.
                       ) 
     learner.learn()
