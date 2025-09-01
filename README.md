@@ -18,7 +18,7 @@ Go watch my tutorial listed above, but here is a quick tutorial
 8. Install rocketsimvis by cloning it: https://github.com/ZealanL/RocketSimVis
 9. Install keyboard via `pip install keyboard`.
 10. Clone this entire repository via `git clone https://github.com/PiggyVevo/ExampleRocketLeagueBot.git`
-11. Open up the `example.py` file in this github to get started, you can just run example.py in the terminal, make sure to navigate to where your example.py file is in terminal after cloning it via the `cd` command.
+11. Open up the `examplebot.py` file in this github to get started, you can just run example.py in the terminal, make sure to navigate to where your example.py file is in terminal after cloning it via the `cd` command.
 
 # Tips\Extra facts
 
@@ -27,5 +27,6 @@ Go watch my tutorial listed above, but here is a quick tutorial
 - Set the critic/policy sizes to the same, and increase the sizes so that your pc is running it at around 8-12k sps
 - If you wanna start a new run, just change the `project name` variable to a new name, and it will automatically create a new run.
 - Do not change the policy and critic sizes during a run, it will change the architecture of the policy and the critic, only change it if you are starting a new run.
+- For the `observation builders` and the `action parsers` just use the ones in the `examplebot.py`, and if your changing them, do not change them in the middle of a run.
 - Subscribe to my channel :D
 - Join the rlgym discord for help(also mentioned above): https://discord.gg/E6CDtwgP8F
