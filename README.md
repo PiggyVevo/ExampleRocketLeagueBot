@@ -6,7 +6,7 @@ Join the [RLGym](https://discord.gg/E6CDtwgP8F) server for help making Rocket Le
 Do keep in mind a basic understanding of python and ML in general is expected.
 Cheaters are not welcome.
 
-For those that have been following along with my journey, thank you, make sure to subscribe to my [YouTube](https://www.youtube.com/channel/UChM_9g85SvPZoLlH65aXayQ) channel, hopefully I will be providing more updates in the future, and check my [YouTube](https://www.youtube.com/channel/UChM_9g85SvPZoLlH65aXayQ) channel as I might be streaming my bot training for the RLBot Championships coming up in November and October.
+For those that have been following along with my journey, thank you, make sure to subscribe to my [YouTube](https://www.youtube.com/@RrichardsWorld) channel, hopefully I will be providing more updates in the future, and check my [YouTube](https://www.youtube.com/@RrichardsWorld) channel as I might be streaming my bot training for the RLBot Championships coming up in November and October.
 
 # Installation
 Go watch my tutorial listed above, but here is a quick tutorial
