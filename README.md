@@ -6,7 +6,7 @@ Invite link to rlgym discord server: https://discord.gg/E6CDtwgP8F
 
 For those that have been following along on the journey, thank you, make sure to subscribe to my youtube channel, hopefully I will be doing more updated in the future, and check my youtube channel as i might be streaming my bot training for the rocket league bot championships in October/November
 
-#Installation
+# Installation
 Go watch my tutorial listed above, but here is a quick tutorial
 1. This tutorial only works on a windows pc
 2. This really isn't needed, but I prefer to use conda instead of terminal/command line, because it sorts packages better, and conda already comes with python(3.12 I think?), so you don't need to download python if you are using conda, navigate to the enviorments, and just left click on base, and choose open terminal, and you should be all set.: https://www.anaconda.com/download
