@@ -1,10 +1,10 @@
 # ExampleRocketLeagueBot
-Code from my tutorials: https://www.youtube.com/watch?v=_IbWTCQNsxE
+Code from my tutorials: https://www.youtube.com/watch?v=_IbWTCQNsxE (this video is combanation of all my tutorials into one single video)
 Join the rlgym server for help making rocket league bots, my username is RichardsWorld in the server.
 
 Invite link to rlgym discord server: https://discord.gg/E6CDtwgP8F
-
-For those that have been following along on the journey, thank you, make sure to subscribe to my youtube channel, hopefully I will be doing more updated in the future, and check my youtube channel as i might be streaming my bot training for the rocket league bot championships in October/November
+The `src` file is the template for getting your bot into rlbot, just swap out the `PPO-POLICY.PT` files for your bots files. For more information of how to get yoru bot into rlbot, follow this tutorial: https://www.youtube.com/watch?v=TyUFIvPY21A
+For those that have been following along on the journey, thank you, make sure to subscribe to my youtube channel, hopefully I will be doing more updated in the future, and check my youtube channel as I might be streaming my bot training for the rocket league bot championship(RLBC) in October/November
 
 # Installation
 Go watch my tutorial listed above, but here is a quick tutorial
