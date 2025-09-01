@@ -3,7 +3,7 @@ Code from my tutorials: https://www.youtube.com/watch?v=_IbWTCQNsxE (this video 
 Join the rlgym server for help making rocket league bots, my username is RichardsWorld in the server.
 
 Invite link to rlgym discord server: https://discord.gg/E6CDtwgP8F
-The `src` file is the template for getting your bot into rlbot, just swap out the `PPO-POLICY.PT` files for your bots files. For more information of how to get yoru bot into rlbot, follow this tutorial: https://www.youtube.com/watch?v=TyUFIvPY21A
+The `src` file is the template for getting your bot into rlbot, just swap out the `PPO-POLICY.PT` files for your bots files. For more information of how to get your bot into rlbot, follow this tutorial: https://www.youtube.com/watch?v=TyUFIvPY21A
 For those that have been following along on the journey, thank you, make sure to subscribe to my youtube channel, hopefully I will be doing more updated in the future, and check my youtube channel as I might be streaming my bot training for the rocket league bot championship(RLBC) in October/November
 
 # Installation
