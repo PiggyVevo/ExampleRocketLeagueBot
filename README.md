@@ -16,7 +16,7 @@ Go watch my tutorial listed above, but here is a quick tutorial
 6. Run the command `pip install git+https://github.com/AechPro/rlgym-ppo` then press enter, it should download, then run the command(just copy this and paste this into the terminal) `pip install rlgym`. If you would like to use rlgym tools, then run the command `pip install rlgym-tools'.
 7. Install rocketsimvis by cloning it: https://github.com/ZealanL/RocketSimVis
 8. Install os via `pip install os` and keyboard via `pip install keyboard`.
-9. Open up the `example.py` file in this github to get started, you can just run example.py in the terminal, make sure to navigate to where your example.py file is tho after cloning it.
+9. Open up the `example.py` file in this github to get started, you can just run example.py in the terminal, make sure to navigate to where your example.py file is in terminal after cloning it via the `cd` command.
 
 # Tips\Extra facts
 
