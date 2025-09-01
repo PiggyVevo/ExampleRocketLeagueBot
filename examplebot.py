@@ -7,7 +7,7 @@ from rlgym.rocket_league.reward_functions.touch_reward import TouchReward
 # NEVER DO from file import *!
 # This can lead to name conflicts that will be infinitely confusing down the line
 # ALWAYS tell Python exactly what you want to import, makes sense for both you and Python.
-
+from rlgym_tools.rocket_league.state_mutators.random_physics_mutator import RandomStateMutator
 project_name="ExampleBot"
 
 def build_rlgym_v2_env():
@@ -58,7 +58,8 @@ def build_rlgym_v2_env():
 
     state_mutator = MutatorSequence(
         FixedTeamSizeMutator(blue_size=blue_team_size, orange_size=orange_team_size),
-        KickoffMutator()
+        KickoffMutator(),
+        RandomStateMutator(),
     )
 
     rlgym_env = RLGym(
