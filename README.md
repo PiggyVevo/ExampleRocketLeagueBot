@@ -18,7 +18,7 @@ Go watch my tutorial listed above, but here is a quick tutorial
 8. Install os via `pip install os` and keyboard via `pip install keyboard`.
 9. Open up the `example.py` file in this github to get started, you can just run example.py in the terminal, make sure to navigate to where your example.py file is tho after cloning it.
 
-#Tips\Extra facts
+# Tips\Extra facts
 
 - If you are stuck, watch my tutorial!!!!!!! I cannot stress this enough, the tutorial will help you, I promise.
 - Do not leave the visualizer open, it will slow down training.
