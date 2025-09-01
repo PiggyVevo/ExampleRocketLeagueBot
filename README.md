@@ -18,7 +18,7 @@ Go watch my tutorial listed above, but here is a quick tutorial
 8. Install rocketsimvis by cloning it: https://github.com/ZealanL/RocketSimVis
 9. Install keyboard via `pip install keyboard`.
 10. Clone this entire repository via `git clone https://github.com/PiggyVevo/ExampleRocketLeagueBot.git`
-11. Open up the `examplebot.py` file in this github to get started, you can just run example.py in the terminal, make sure to navigate to where your example.py file is in terminal after cloning it via the `cd` command.
+11. Open up the `examplebot.py` file in this github to get started, you can just run example.py in the terminal, make sure to navigate to where your `examplebot.py` file is in terminal after cloning it via the `cd` command.
 
 # Tips\Extra facts
 
