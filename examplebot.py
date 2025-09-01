@@ -13,11 +13,13 @@ from rlgym.rocket_league.api import GameState, Car
 
 DEFAULT_UDP_IP = "127.0.0.1"
 DEFAULT_UDP_PORT = 9273  # Default RocketSimVis port
-project_name="ExampleBot"
+project_name="ExampleBot" #the name of your bot, changing this will start a new run 
 
 BUTTON_NAMES = ("throttle", "steer", "pitch", "yaw", "roll", "jump", "boost", "handbrake")
 
-
+#=========================================
+#Renderer
+#=========================================
 class RocketSimVisRenderer(Renderer[GameState]):
     """
     A renderer that sends game state information to RocketSimVis.
@@ -83,6 +85,99 @@ class RocketSimVisRenderer(Renderer[GameState]):
     def close(self):
         pass
 
+#=========================================
+#State Setters
+#=========================================
+
+from typing import Dict, Any
+
+import numpy as np
+from rlgym.api import StateMutator
+from rlgym.rocket_league.api import GameState
+from rlgym.rocket_league.common_values import SIDE_WALL_X, BACK_WALL_Y, CEILING_Z
+from rlgym.rocket_league.math import rand_vec3, rand_uvec3, normalize
+
+from rlgym_tools.rocket_league.reward_functions.aerial_distance_reward import RAMP_HEIGHT
+
+
+class RandomPhysicsMutator(StateMutator[GameState]):  #taken from rlgym tools, slightly modified
+    def apply(self, state: GameState, shared_info: Dict[str, Any]) -> None:
+        padding = 100  # Ball radius and car hitbox with biggest radius are both below this
+        goal_line_y = 5120
+        min_goal_dist = 2000
+        i = 0
+
+        for po in [state.ball] + [car.physics for car in state.cars.values()]:
+            while True:
+                if i == 0:
+                    max_z = CEILING_Z - padding
+                else:
+                    # Cars spawn at max 1/6 ceiling height, because falling from the sky is pointless
+                    max_z = (CEILING_Z / 6) - padding
+
+                new_pos = np.random.uniform(
+                    [-SIDE_WALL_X + padding, -BACK_WALL_Y + padding, 0 + padding],
+                    [SIDE_WALL_X - padding, BACK_WALL_Y - padding, max_z]
+                )
+
+               #Make sure ball spawns at least 2000 uu from both goal lines
+                if i == 0 and (abs(new_pos[1]) > goal_line_y - min_goal_dist):
+                    continue
+
+                # Field edge checks
+                if abs(new_pos[0]) + abs(new_pos[1]) >= 8064 - padding:
+                    continue
+
+                close_to_wall = (
+                    abs(new_pos[0]) >= SIDE_WALL_X - RAMP_HEIGHT or
+                    abs(new_pos[1]) >= BACK_WALL_Y - RAMP_HEIGHT or
+                    abs(new_pos[0]) + abs(new_pos[1]) >= 8064 - RAMP_HEIGHT
+                )
+                close_to_floor_or_ceiling = (
+                    new_pos[2] <= RAMP_HEIGHT or
+                    new_pos[2] >= CEILING_Z - RAMP_HEIGHT
+                )
+
+                if close_to_wall and close_to_floor_or_ceiling:
+                    continue
+
+                break
+
+            # Assign position and random motion
+            po.position = new_pos
+            po.linear_velocity = rand_vec3(2300)
+            po.angular_velocity = rand_vec3(5)
+
+            # Set rotation matrix for cars only
+            if i > 0:
+                fw = rand_uvec3()
+                up = rand_uvec3()
+                right = normalize(np.cross(up, fw))
+                up = normalize(np.cross(fw, right))
+                rot_mat = np.stack([fw, right, up])
+                po.rotation_mtx = rot_mat
+
+            i += 1
+            
+from rlgym_tools.rocket_league.state_mutators.variable_team_size_mutator import VariableTeamSizeMutator
+        
+from rlgym_tools.rocket_league.state_mutators.weighted_sample_mutator import WeightedSampleMutator
+from rlgym.rocket_league.state_mutators import MutatorSequence, KickoffMutator
+    
+class RandomStateMutator(StateMutator[GameState]):
+    def __init__(self):
+        self.mutator = WeightedSampleMutator.from_zipped(
+            (KickoffMutator(), 0.6),  #this means that 60% of the time, the ball and the cars will be in kickoff positions
+            (RandomPhysicsMutator(), 0.4)   #this means that 40% of the time, the ball and the cars will be in random positions         
+        )
+
+    def apply(self, state: GameState, shared_info: Dict[str, Any]) -> None:
+        self.mutator.apply(state, shared_info)
+
+#=========================================
+#Rewards
+#=========================================
+        
 from typing import List, Dict, Any
 from rlgym.api import RewardFunction, AgentID
 from rlgym.rocket_league.api import GameState
@@ -228,7 +323,9 @@ class TouchReward(RewardFunction[AgentID, GameState, float]):
         return 1. if state.cars[agent].ball_touches > 0 else 0.
 
 
-
+#=========================================
+#Training Script
+#=========================================
 def build_rlgym_v2_env():
     import numpy as np
     from rlgym.api import RLGym
@@ -256,8 +353,8 @@ def build_rlgym_v2_env():
         TimeoutCondition(timeout_seconds=game_timeout_seconds)
     )
 
-    reward_fn = CombinedReward(
-        (InAirReward(), 0.15),
+    reward_fn = CombinedReward(  
+        (InAirReward(), 0.15), 
         (SpeedTowardBallReward(), 5),
         (VelocityBallToGoalReward(), 10),
         (TouchReward(), 50),
@@ -267,7 +364,8 @@ def build_rlgym_v2_env():
         (AdvancedTouchReward(touch_reward=0.5, acceleration_reward=1.0), 75.0),
         (GoalReward(), 500.0)
     )
-
+    #the rewards listed above are just sample rewards, follow this tutorial for more information: https://www.youtube.com/watch?v=l3j8-re_x7Q
+    
     obs_builder = DefaultObs(zero_padding=3,
                            pos_coef=np.asarray([1 / common_values.SIDE_WALL_X, 
                                               1 / common_values.BACK_NET_Y, 
@@ -275,12 +373,12 @@ def build_rlgym_v2_env():
                            ang_coef=1 / np.pi,
                            lin_vel_coef=1 / common_values.CAR_MAX_SPEED,
                            ang_vel_coef=1 / common_values.CAR_MAX_ANG_VEL,
-                           boost_coef=1 / 100.0)
+                           boost_coef=1 / 100.0) #your observation builder, how your bot perceives the game
 
     state_mutator = MutatorSequence(
         FixedTeamSizeMutator(blue_size=blue_team_size, orange_size=orange_team_size),
-        KickoffMutator()
-    )
+        RandomStateMutator() #RandomStateMutator is better because having the ball be randomly spawning in some spots helps with exploration
+    )  
 
     rlgym_env = RLGym(
         state_mutator=state_mutator,
@@ -290,7 +388,7 @@ def build_rlgym_v2_env():
         termination_cond=termination_condition,
         truncation_cond=truncation_condition,
         transition_engine=RocketSimEngine(),
-        renderer=RocketSimVisRenderer()
+        renderer=RocketSimVisRenderer() #our renderer
     )
 
     return RLGymV2GymWrapper(rlgym_env)
@@ -300,14 +398,17 @@ if __name__ == "__main__":
     from rlgym_ppo import Learner
 
     # 32 processes
-    n_proc = 32
+    n_proc = 32 #set this as high as you can go without lagging a ton when you start up training, I have an i7-12700k cpu, and I use 96 processes
+                #the better cpu you have, the higher you set it for max steps per second, this setting does not matter how good of a gpu you have or if you even have a gpu(like me)
 
     # educated guess - could be slightly higher or lower
     min_inference_size = max(1, int(round(n_proc * 0.9)))
+
+    #Our code for loading our checkpoints
     checkpoint_folder = f"data/checkpoints/{project_name}"
     if not os.path.exists(checkpoint_folder):
         os.makedirs(checkpoint_folder)
-
+    
     checkpoint_files = os.listdir(checkpoint_folder)
     checkpoint_load_folder = os.path.join(checkpoint_folder, max(checkpoint_files)) if checkpoint_files else None
 
@@ -316,26 +417,27 @@ if __name__ == "__main__":
                       n_proc=n_proc,
                       min_inference_size=min_inference_size,
                       metrics_logger=None, # Leave this empty for now.
-                      ppo_batch_size=100_000,  # batch size - much higher than 300K doesn't seem to help most people
+                      ppo_batch_size=100_000,  # batch size - much higher than 300K doesn't seem to help most people, increase this as you go
                       policy_layer_sizes=[512, 512, 512],  # policy network
                       critic_layer_sizes=[512, 512, 512],  # critic network
                       ts_per_iteration=100_000,  # timesteps per training iteration - set this equal to the batch size
-                      exp_buffer_size=300_000,  # size of experience buffer - keep this 2 - 3x the batch size
-                      ppo_minibatch_size=50_000,  # minibatch size - set this as high as your GPU can handle
-                      ppo_ent_coef=0.01,
-                      render=True,
-                      render_delay=0.047,
-                      add_unix_timestamp=False,
+                      exp_buffer_size=300_000,  # size of experience buffer - keep this 3x the batch size
+                      ppo_minibatch_size=50_000,  # minibatch size - set this as high as your GPU can handle, if you run on cpu, set it to something very big (RAM is usually bigger than VRAM), or something quite small (CPU cache size)
+                      ppo_ent_coef=0.01, #0.01 is pretty optimal, this determines the impact of exploration
+                      render=True, #Keep this on for rendering, just make sure not to leave the renderer window open in rocketsimvis
+                      n_checkpoints_to_keep=1000, #set this to as high as you want, this is just how many checkpoints you keep
+                      render_delay=0.047, #this will visualize the game at around normal speed, increasing this will make the game go slower, decreasing this will make the game go faster
+                      add_unix_timestamp=False, #disable this, otherwise checkpoints will not load
                       checkpoint_load_folder=checkpoint_load_folder,
-                      checkpoints_save_folder=checkpoint_folder,                      # entropy coefficient - this determines the impact of exploration
+                      checkpoints_save_folder=checkpoint_folder,                      
                       policy_lr=2e-4, # policy learning rate
                       device="auto", #device to use
                       critic_lr=2e-4,  # critic learning rate
-                      ppo_epochs=2,   # number of PPO epochs
+                      ppo_epochs=2,   # number of PPO epochs(how many times the learner looks over the data), 2 is pretty optimal for best steps per second and learnign quality
                       standardize_returns=True, # Don't touch these.
                       standardize_obs=False, # Don't touch these.
-                      save_every_ts=10_000_000,  # save every 1M steps
-                      timestep_limit=50_000_000_000,  # Train for 1B steps
+                      save_every_ts=10_000_000,  # save every 10M steps
+                      timestep_limit=50_000_000_000,  # Train for 50B steps
                       log_to_wandb=False # Set this to True if you want to use Weights & Biases for logging.
                       ) 
-    learner.learn()
+    learner.learn() #we start training!
