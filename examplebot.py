@@ -13,6 +13,7 @@ from rlgym.rocket_league.api import GameState, Car
 
 DEFAULT_UDP_IP = "127.0.0.1"
 DEFAULT_UDP_PORT = 9273  # Default RocketSimVis port
+project_name="ExampleBot"
 
 BUTTON_NAMES = ("throttle", "steer", "pitch", "yaw", "roll", "jump", "boost", "handbrake")
 
@@ -81,17 +82,13 @@ class RocketSimVisRenderer(Renderer[GameState]):
 
     def close(self):
         pass
-        
-project_name="ExampleBot"
 
 from typing import List, Dict, Any
 from rlgym.api import RewardFunction, AgentID
 from rlgym.rocket_league.api import GameState
 from rlgym.rocket_league import common_values
-<<<<<<< HEAD
 import numpy as np
 
-=======
 from typing import Any, Dict, List
 import numpy as np
 from rlgym.rocket_league.common_values import BALL_MAX_SPEED
@@ -155,7 +152,6 @@ class FaceBallReward(RewardFunction):
 
         return rewards
                         
->>>>>>> 27fbf3e8c5dfd29ee5575d83612897a2518d000c
 class SpeedTowardBallReward(RewardFunction[AgentID, GameState, float]):
     """Rewards the agent for moving quickly toward the ball"""
     
@@ -262,16 +258,13 @@ def build_rlgym_v2_env():
 
     reward_fn = CombinedReward(
         (InAirReward(), 0.15),
-<<<<<<< HEAD
         (SpeedTowardBallReward(), 5),
         (VelocityBallToGoalReward(), 10),
         (TouchReward(), 50),
-=======
         (SpeedTowardBallReward(), 5.0),
         (FaceBallReward(), 1.0),
         (VelocityBallToGoalReward(), 10.0),
         (AdvancedTouchReward(touch_reward=0.5, acceleration_reward=1.0), 75.0),
->>>>>>> 27fbf3e8c5dfd29ee5575d83612897a2518d000c
         (GoalReward(), 500.0)
     )
 
@@ -335,25 +328,14 @@ if __name__ == "__main__":
                       add_unix_timestamp=False,
                       checkpoint_load_folder=checkpoint_load_folder,
                       checkpoints_save_folder=checkpoint_folder,                      # entropy coefficient - this determines the impact of exploration
-<<<<<<< HEAD
-                      policy_lr=1e-4,
-                      device="cpu", # policy learning rate
-                      critic_lr=1e-4,  # critic learning rate
-                      ppo_epochs=2,   # number of PPO epochs
-                      standardize_returns=True, # Don't touch these.
-                      standardize_obs=False, # Don't touch these.
-                      save_every_ts=1_000_000,  # save every 1M steps
-                      timestep_limit=1_000_000_000,  # Train for 1B steps
-=======
-                      policy_lr=2e-4,
-                      device="auto", # policy learning rate
+                      policy_lr=2e-4, # policy learning rate
+                      device="auto", #device to use
                       critic_lr=2e-4,  # critic learning rate
                       ppo_epochs=2,   # number of PPO epochs
                       standardize_returns=True, # Don't touch these.
                       standardize_obs=False, # Don't touch these.
                       save_every_ts=10_000_000,  # save every 1M steps
                       timestep_limit=50_000_000_000,  # Train for 1B steps
->>>>>>> 27fbf3e8c5dfd29ee5575d83612897a2518d000c
                       log_to_wandb=False # Set this to True if you want to use Weights & Biases for logging.
                       ) 
     learner.learn()
