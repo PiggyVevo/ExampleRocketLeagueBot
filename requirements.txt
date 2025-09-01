@@ -1,0 +1,5 @@
+pip
+keyboard
+rlgym
+rlgym-tools
+git+https://github.com/AechPro/rlgym-ppo
