@@ -17,7 +17,7 @@ Go watch my tutorial listed above, but here is a quick tutorial
 5. Ensure you have [git](https://git-scm.com/downloads/win) installed.
 6. If you have an NVIDIA GPU, install [PyTorch](https://pytorch.org/get-started/locally/) with CUDA support, if you don't have an NVIDIA GPU then go with with CPU only, follow the page instructions.
 7. Run the command `pip install git+https://github.com/AechPro/rlgym-ppo` then press enter, it should download, then run the command(just copy this and paste this into the terminal) `pip install rlgym`. 
-8. Install rocketsimvis by cloning it: https://github.com/ZealanL/RocketSimVis
+8. Install [RocketSimVis](https://github.com/ZealanL/RocketSimVis).
 9. Run `pip install -r requirements.txt`
 10. Open up the `example.py` file in this repository to get started, you can just run example.py in the command line, make sure to navigate to where your example.py file with the command line after cloning it via the `cd` command.
 
