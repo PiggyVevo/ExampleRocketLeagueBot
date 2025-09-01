@@ -1,6 +1,10 @@
 from rlgym_tools.rocket_league.renderers.rocketsimvis_renderer import RocketSimVisRenderer
 import os
 import numpy as np
+from rewards import AdvancedTouchReward, FaceBallReward, SpeedTowardBallReward, InAirReward, VelocityBallToGoalReward, TouchReward
+# NEVER DO from file import *!
+# This can lead to name conflicts that will be infinitely confusing down the line
+# ALWAYS tell Python exactly what you want to import, makes sense for both you and Python.
 
 project_name="ExampleBot"
 
@@ -21,8 +25,8 @@ def build_rlgym_v2_env():
     blue_team_size = team_size
     orange_team_size = team_size if spawn_opponents else 0
     action_repeat = 8
-    no_touch_timeout_seconds = 30
-    game_timeout_seconds = 300
+    no_touch_timeout_seconds = 10 # how many seconds until we cut the episode short because the agent hasn't touched the ball
+    game_timeout_seconds = 300 # full match length timeout.
 
     action_parser = RepeatAction(LookupTableAction(), repeats=action_repeat)
     termination_condition = GoalCondition()
@@ -32,15 +36,13 @@ def build_rlgym_v2_env():
     )
 
     reward_fn = CombinedReward(
-        (InAirReward(), 0.15),
-        (SpeedTowardBallReward(), 5.0),
-        (VelocityBallToGoalReward(), 10.0),
-        (TouchReward(), 50.0),
-        (SpeedTowardBallReward(), 5.0),
-        (FaceBallReward(), 1.0),
-        (VelocityBallToGoalReward(), 10.0),
-        (AdvancedTouchReward(touch_reward=0.5, acceleration_reward=1.0), 75.0),
-        (GoalReward(), 500.0)
+        (InAirReward(), 0.15), # Don't forget to jump!
+        (SpeedTowardBallReward(), 5.0), # Move towards the ball!
+        (VelocityBallToGoalReward(), 10.0), # Move the ball towards the goal!
+        (TouchReward(), 50.0), # Big reward for touching the ball!
+        (FaceBallReward(), 1.0), # Make sure we don't start driving backwards at the ball, too many times...
+        (AdvancedTouchReward(touch_reward=0.5, acceleration_reward=1.0), 75.0), # Slightly more convoluted touch reward that also rewards powerful hits.
+        (GoalReward(), 500.0) # I wouldn't set the goal scooring weight this high, but make sure scoring is the most important task.
     )
 
     obs_builder = DefaultObs(zero_padding=3,
@@ -76,6 +78,8 @@ if __name__ == "__main__":
 
     # 32 processes
     n_proc = 32
+    # Try increasing or decreasing this number as this has a direct correlation with performance.
+    # I'd decrease it until performance started dropping to have maximum efficiency.
 
     # educated guess - could be slightly higher or lower
     min_inference_size = max(1, int(round(n_proc * 0.9)))
@@ -86,7 +90,8 @@ if __name__ == "__main__":
     checkpoint_files = os.listdir(checkpoint_folder)
     checkpoint_load_folder = os.path.join(checkpoint_folder, max(checkpoint_files)) if checkpoint_files else None
 
-
+    # Basic hyperparameters, see what works for you!
+    # Play around with them, don't take these for gospel
     learner = Learner(build_rlgym_v2_env,
                       n_proc=n_proc,
                       min_inference_size=min_inference_size,
