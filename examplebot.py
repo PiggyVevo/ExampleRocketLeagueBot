@@ -3,23 +3,24 @@ from typing import List, Dict, Any
 from rlgym.api import RewardFunction, AgentID
 from rlgym.rocket_league.api import GameState
 import os
-import json
-import socket
 from typing import Dict, Any
 
+
+project_name="ExampleBot" #the name of your bot, changing this will start a new run 
+
+#=========================================
+#Renderer
+#=========================================
+import json
+import socket
 import numpy as np
 from rlgym.api import Renderer
 from rlgym.rocket_league.api import GameState, Car
 
 DEFAULT_UDP_IP = "127.0.0.1"
 DEFAULT_UDP_PORT = 9273  # Default RocketSimVis port
-project_name="ExampleBot" #the name of your bot, changing this will start a new run 
-
 BUTTON_NAMES = ("throttle", "steer", "pitch", "yaw", "roll", "jump", "boost", "handbrake")
 
-#=========================================
-#Renderer
-#=========================================
 class RocketSimVisRenderer(Renderer[GameState]):
     """
     A renderer that sends game state information to RocketSimVis.
