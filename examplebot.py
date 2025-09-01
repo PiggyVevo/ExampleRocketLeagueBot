@@ -8,8 +8,19 @@ from rlgym.rocket_league.reward_functions.touch_reward import TouchReward
 # This can lead to name conflicts that will be infinitely confusing down the line
 # ALWAYS tell Python exactly what you want to import, makes sense for both you and Python.
 from rlgym_tools.rocket_league.state_mutators.random_physics_mutator import RandomStateMutator
-project_name="ExampleBot"
 
+
+project_name="ExampleBot" #the name of your bot, changing this will start a new run 
+            
+from rlgym_tools.rocket_league.state_mutators.variable_team_size_mutator import VariableTeamSizeMutator
+        
+from rlgym_tools.rocket_league.state_mutators.weighted_sample_mutator import WeightedSampleMutator
+from rlgym.rocket_league.state_mutators import MutatorSequence, KickoffMutator
+from rlgym_tools.rocket_league.state_mutators.random_physics_mutator import RandomPhysicsMutator
+
+#=========================================
+#Training Script
+#=========================================
 def build_rlgym_v2_env():
     import numpy as np
     from rlgym.api import RLGym
@@ -44,9 +55,10 @@ def build_rlgym_v2_env():
         (TouchReward(), 50.0), # Big reward for touching the ball!
         (FaceBallReward(), 1.0), # Make sure we don't start driving backwards at the ball, too many times...
         (AdvancedTouchReward(touch_reward=0.5, acceleration_reward=1.0), 75.0), # Slightly more convoluted touch reward that also rewards powerful hits.
-        (GoalReward(), 500.0) # I wouldn't set the goal scooring weight this high, but make sure scoring is the most important task.
+        (GoalReward(), 500.0) # I wouldn't set the goal scoring weight this high, but make sure scoring is the most important task.
     )
-
+    #the rewards listed above are just sample rewards(the weights are pretty bad), follow this tutorial for more information: https://www.youtube.com/watch?v=l3j8-re_x7Q
+    
     obs_builder = DefaultObs(zero_padding=3,
                            pos_coef=np.asarray([1 / common_values.SIDE_WALL_X, 
                                               1 / common_values.BACK_NET_Y, 
@@ -54,12 +66,15 @@ def build_rlgym_v2_env():
                            ang_coef=1 / np.pi,
                            lin_vel_coef=1 / common_values.CAR_MAX_SPEED,
                            ang_vel_coef=1 / common_values.CAR_MAX_ANG_VEL,
-                           boost_coef=1 / 100.0)
+                           boost_coef=1 / 100.0) #your observation builder, how your bot perceives the game
 
     state_mutator = MutatorSequence(
         FixedTeamSizeMutator(blue_size=blue_team_size, orange_size=orange_team_size),
-        KickoffMutator(),
-        RandomStateMutator(),
+        WeightedSampleMutator.from_zipped(
+            (KickoffMutator(), 0.25),  #this means that 60% of the time, the ball and the cars will be in kickoff positions
+            (RandomPhysicsMutator(), 0.75)   #this means that 40% of the time, the ball and the cars will be in random positions         
+        ) # saucy rolv ratios :3
+    )
     )
 
     rlgym_env = RLGym(
@@ -86,10 +101,12 @@ if __name__ == "__main__":
 
     # educated guess - could be slightly higher or lower
     min_inference_size = max(1, int(round(n_proc * 0.9)))
+
+    #Our code for loading our checkpoints
     checkpoint_folder = f"data/checkpoints/{project_name}"
     if not os.path.exists(checkpoint_folder):
         os.makedirs(checkpoint_folder)
-
+    
     checkpoint_files = os.listdir(checkpoint_folder)
     checkpoint_load_folder = os.path.join(checkpoint_folder, max(checkpoint_files)) if checkpoint_files else None
 
@@ -118,7 +135,7 @@ if __name__ == "__main__":
                       standardize_returns=True, # Don't touch these.
                       standardize_obs=False, # Don't touch these.
                       save_every_ts=10_000_000,  # save every 1M steps
-                      timestep_limit=50_000_000_000,  # Train for 1B steps
+                      timestep_limit=1e69,  # Train for an absurd number of steps, can be used if you have good hyperparameter staging or need to rapidly prototype things.
                       log_to_wandb=False # Set this to True if you want to use Weights & Biases for logging, Weights & Biases is generally optimal and the most used option.
                       ) 
-    learner.learn()
+    learner.learn() #we start training!

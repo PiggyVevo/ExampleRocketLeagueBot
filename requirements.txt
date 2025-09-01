@@ -1,1 +1,4 @@
 keyboard
+rlgym[all]
+rlgym-tools
+git+https://github.com/AechPro/rlgym-ppo
