@@ -355,17 +355,14 @@ def build_rlgym_v2_env():
     )
 
     reward_fn = CombinedReward(  
-        (InAirReward(), 0.15), 
-        (SpeedTowardBallReward(), 5),
-        (VelocityBallToGoalReward(), 10),
-        (TouchReward(), 50),
-        (SpeedTowardBallReward(), 5.0),
-        (FaceBallReward(), 1.0),
-        (VelocityBallToGoalReward(), 10.0),
-        (AdvancedTouchReward(touch_reward=0.5, acceleration_reward=1.0), 75.0),
-        (GoalReward(), 500.0)
+        (InAirReward(), 0.15), #bots hate jumping/doing aerials, so we need reeards to get the bot to jump, for aerial touch rewards, you need lots of encouragement for it to aerial
+        (SpeedTowardBallReward(), 5.0), #for driving towards the ball
+        (FaceBallReward(), 1.0), #for facing the ball so bot doesn't drive backwards
+        (VelocityBallToGoalReward(), 10.0), #for encouraging agents to hit the ball towards the opponents goal
+        (AdvancedTouchReward(touch_reward=0.5, acceleration_reward=1.0), 75.0), #for strong touches, not just soft touches
+        (GoalReward(), 500.0) #scoring,don't set this too high though, as it will drown out other rewards
     )
-    #the rewards listed above are just sample rewards, follow this tutorial for more information: https://www.youtube.com/watch?v=l3j8-re_x7Q
+    #the rewards listed above are just sample rewards(the weights are pretty bad), follow this tutorial for more information: https://www.youtube.com/watch?v=l3j8-re_x7Q
     
     obs_builder = DefaultObs(zero_padding=3,
                            pos_coef=np.asarray([1 / common_values.SIDE_WALL_X, 
