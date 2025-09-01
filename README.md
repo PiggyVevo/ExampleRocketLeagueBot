@@ -11,7 +11,7 @@ For those that have been following along with my journey, thank you, make sure t
 # Installation
 Go watch my tutorial listed above, but here is a quick tutorial
 1. This tutorial only works for Windows.
-2. This really isn't needed, but I prefer to use conda instead of terminal/command line, because it sorts packages better, and conda already comes with Python 3.11, so you don't need to download python if you are using conda, navigate to the environments, and just left click on base, and choose open terminal, and you should be all set.: https://www.anaconda.com/download
+2. This really isn't needed, but I prefer to use [conda](https://www.anaconda.com/download) instead of terminal/command line, because it sorts packages better, and conda already comes with Python 3.11, so you don't need to download python if you are using [conda](https://www.anaconda.com/download), navigate to the environments, and just left click on base, and choose open terminal, and you should be all set.
    Alternatively you can make use of the venv module to create a virtual environment, `python -m venv venv` to create one in the local directory. 
 4. Ensure [Python](https://www.python.org/downloads/) is installed, if it isn't then install any version of Python between 3.10 and 3.13.
 5. Ensure you have [git](https://git-scm.com/downloads/win) installed.
