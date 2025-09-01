@@ -67,7 +67,7 @@ def build_rlgym_v2_env():
         termination_cond=termination_condition,
         truncation_cond=truncation_condition,
         transition_engine=RocketSimEngine(),
-        renderer=RocketSimVisRenderer()
+        renderer=RocketSimVisRenderer() # THIS IS ONLY THE CLIENT! You will need to clone it in accordance with the readme.md in order to watch your bot play! 
     )
 
     return RLGymV2GymWrapper(rlgym_env)
