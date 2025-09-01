@@ -1,5 +1,5 @@
 # ExampleRocketLeagueBot
-Code from my tutorials: https://www.youtube.com/watch?v=_IbWTCQNsxE (this video is combanation of all my tutorials into one single video)
+Code from my tutorials: https://www.youtube.com/watch?v=_IbWTCQNsxE (this video is combonation of all my tutorials into one single video)
 Join the rlgym server for help making rocket league bots, my username is RichardsWorld in the server.
 
 Invite link to rlgym discord server: https://discord.gg/E6CDtwgP8F
