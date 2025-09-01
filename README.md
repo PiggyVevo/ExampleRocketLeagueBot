@@ -24,7 +24,6 @@ Go watch my tutorial listed above, but here is a quick tutorial
 You can install [RLGym-tools](https://github.com/RLGym/rlgym-tools), which provides extra reward functions, observation builders and action parsers, among other useful utilities, some of which are utilized in this guide.
 
 # Tips\Extra facts
-
 - If you are stuck, watch my [tutorial](https://www.youtube.com/watch?v=_IbWTCQNsxE)!!!!!!! I cannot stress this enough, the [tutorial](https://www.youtube.com/watch?v=_IbWTCQNsxE) will help you, I promise.
 - Do not leave the visualizer open as rendering while learning will greatly slow down your training.
 - Play around with policy and critic layer sizes, if you don't know what you're doing then I'd advise you to keep the layer sizes the same, and see what the highest you can go is before you start to lose performance (measured overall by your total steps per second (also referred to as sps)
