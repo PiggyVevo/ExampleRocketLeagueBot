@@ -14,9 +14,10 @@ Go watch my tutorial listed above, but here is a quick tutorial
 4. Install git: https://git-scm.com/downloads/win
 5. If you have nvidia gpu, install pytorch with cuda, if only cpu/other gpu(like AMD), then choose to download with cpu only, just run the command in the terminal: https://pytorch.org/get-started/locally/
 6. Run the command `pip install git+https://github.com/AechPro/rlgym-ppo` then press enter, it should download, then run the command(just copy this and paste this into the terminal) `pip install rlgym`. If you would like to use rlgym tools, then run the command `pip install rlgym-tools'.
-7. Install rocketsimvis by cloning it: https://github.com/ZealanL/RocketSimVis
-8. Install keyboard via `pip install keyboard`.
-9. Open up the `example.py` file in this github to get started, you can just run example.py in the terminal, make sure to navigate to where your example.py file is in terminal after cloning it via the `cd` command.
+7. Or if you dont feel like installing some of the stuff listed, just do `pip install -r requirements.txt` and it should install everything for you(other than anaconda, git, and pytorch), make sure to install it in the directory where your bot stuff are!!!
+8. Install rocketsimvis by cloning it: https://github.com/ZealanL/RocketSimVis
+9. Install keyboard via `pip install keyboard`.
+10. Open up the `example.py` file in this github to get started, you can just run example.py in the terminal, make sure to navigate to where your example.py file is in terminal after cloning it via the `cd` command.
 
 # Tips\Extra facts
 
