@@ -1,6 +1,7 @@
 # ExampleRocketLeagueBot
 Code from my tutorials:
 [![How to make a Grand Champion Rocket League Bot](https://img.youtube.com/vi/_IbWTCQNsxE/0.jpg)](https://www.youtube.com/watch?v=_IbWTCQNsxE)
+
 Join the [RLGym](https://discord.gg/E6CDtwgP8F) server for help making Rocket League bots, my username is @`RichardsWorld` in the server.
 Do keep in mind a basic understanding of python and ML in general is expected.
 Cheaters are not welcome.
