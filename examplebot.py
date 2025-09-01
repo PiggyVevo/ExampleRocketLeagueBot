@@ -1,7 +1,9 @@
 from rlgym_tools.rocket_league.renderers.rocketsimvis_renderer import RocketSimVisRenderer
 import os
 import numpy as np
-from rewards import AdvancedTouchReward, FaceBallReward, SpeedTowardBallReward, InAirReward, VelocityBallToGoalReward, TouchReward
+from rewards import FaceBallReward, SpeedTowardBallReward, InAirReward, VelocityBallToGoalReward
+from rlgym_tools.rocket_league.reward_functions.advanced_touch_reward import AdvancedTouchReward
+from rlgym.rocket_league.reward_functions.touch_reward import TouchReward
 # NEVER DO from file import *!
 # This can lead to name conflicts that will be infinitely confusing down the line
 # ALWAYS tell Python exactly what you want to import, makes sense for both you and Python.
