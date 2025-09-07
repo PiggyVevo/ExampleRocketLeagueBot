@@ -2,4 +2,5 @@ pip
 keyboard
 rlgym
 rlgym-tools
+torch
 git+https://github.com/AechPro/rlgym-ppo
