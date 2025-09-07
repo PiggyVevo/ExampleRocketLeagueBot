@@ -7,6 +7,7 @@ from typing import Dict, Any
 import torch
 
 project_name="ExampleBot" #the name of your bot, changing this will start a new run 
+device = torch.device("cpu") #device to use, if you have nvidia gpu, install cuda drivers and pytorch with cuda, and change cpu to cuda
 
 #=========================================
 #Renderer
@@ -426,10 +427,10 @@ if __name__ == "__main__":
                       n_checkpoints_to_keep=1000, #set this to as high as you want, this is just how many checkpoints you keep
                       render_delay=0.047, #this will visualize the game at around normal speed, increasing this will make the game go slower, decreasing this will make the game go faster
                       add_unix_timestamp=False, #disable this, otherwise checkpoints will not load
-                      checkpoint_load_folder=checkpoint_load_folder,
-                      checkpoints_save_folder=checkpoint_folder,                      
+                      checkpoint_load_folder=checkpoint_load_folder, #what folder we load our checkpoints from
+                      checkpoints_save_folder=checkpoint_folder,  #what folder we save our checkpoints to                  
                       policy_lr=2e-4, # policy learning rate
-                      device="auto", #device to use
+                      device=device, #device to use, already set at the top of the page
                       critic_lr=2e-4,  # critic learning rate
                       ppo_epochs=2,   # number of PPO epochs(how many times the learner looks over the data), 2 is pretty optimal for best steps per second and learnign quality
                       standardize_returns=True, # Don't touch these.
