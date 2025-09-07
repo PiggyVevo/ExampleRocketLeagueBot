@@ -1,0 +1,6 @@
+pip
+colorama
+torch
+rlgym
+rlgym-tools
+rlbot==2.0.0b44
