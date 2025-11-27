@@ -7,6 +7,7 @@ from rlgym_compat import GameState, common_values
 from collections import OrderedDict
 import colorama
 
+# TODO: refactor this example bot.
 
 # Your imports here
 from act import LookupTableAction
